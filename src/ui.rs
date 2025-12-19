@@ -87,8 +87,8 @@ pub fn ui(frame: &mut Frame, app: &App) {
     let footer_layout = Layout::default()
         .direction(Direction::Horizontal)
         .constraints([
-            Constraint::Percentage(50),
-            Constraint::Percentage(50),
+            Constraint::Min(1),
+            Constraint::Length(9),
         ])
         .split(main_layout[1]);
 
