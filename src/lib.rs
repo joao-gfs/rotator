@@ -21,11 +21,31 @@ impl Ciphertext {
         let mut new_text = String::new();
         
         for c in self.current_text.as_bytes() {
-            let offset: u8;
-            let char_num: u8;
-            let new_char: u8;
+            let new_char = rotate_char(*c, rot_num);
+            new_text.push(new_char);
+        }
 
-            match c {
+        self.current_text = new_text;
+        self.rot = (self.rot + rot_num) % 26;
+    }
+
+    pub fn push(&mut self, c: char) {
+        self.original_text.push(c);
+        let rotated_char = rotate_char(c as u8, self.rot);
+        self.current_text.push(rotated_char);
+    }
+
+    pub fn pop(&mut self) {
+        self.original_text.pop();
+        self.current_text.pop();
+    }
+}
+
+fn rotate_char(c: u8, rot_num: u8) -> char {
+    let offset: u8;
+    let char_num: u8;
+    let new_char: u8;
+    match c {
                 65..91 => {
                     offset = 65;
                     char_num = c - 65;
@@ -37,15 +57,10 @@ impl Ciphertext {
                     new_char = caculate_char_rotation(char_num, rot_num, offset);
                 }
                 _ => {
-                    new_char = *c;
+                    new_char = c;
                 }
             }
-            new_text.push(new_char as char);
-        }
-
-        self.current_text = new_text;
-        self.rot = (self.rot + rot_num) % 26;
-    }
+    new_char as char
 }
 
 fn caculate_char_rotation(char_num: u8, rot_num: u8, offset: u8) -> u8 {
